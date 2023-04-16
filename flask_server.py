@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 from textblob import TextBlob
+import spacy
 
 # app = Flask(__name__)
 
 app = Flask(__name__, template_folder='templateFiles', static_folder='staticFiles')
+
+nlp = spacy.load('en_core_web_sm')
 
 
 @app.route('/')
@@ -24,7 +27,16 @@ def analyze_text():
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
     subjectivity = blob.sentiment.subjectivity
-    response = {'polarity': polarity, 'subjectivity': subjectivity}
+
+    doc = nlp(text)
+    results = {
+        'input_sentence': text,
+        'tokens': [token.text for token in doc],
+        'pos_tags': [token.pos_ for token in doc],
+        'ner_tags': [token.ent_type_ for token in doc],
+        # Add more analysis results here
+    }
+    response = {'polarity': polarity, 'subjectivity': subjectivity, 'results': results}
     return jsonify(response)
 
 if __name__ == '__main__':

@@ -29,6 +29,7 @@
         const json = await response.json();
         const polarity = json.polarity;
         const subjectivity = json.subjectivity;
+        console.log(json)
 
         const message = `Polarity: ${polarity}\nSubjectivity: ${subjectivity}`;
         responseDiv.textContent = message;
