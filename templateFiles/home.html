@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Quture Teller</title>
+  </head>
+  <body>
+    <h1>Quture Teller</h1>
+    <form action="/analyze" method="POST">
+      <textarea name="text" rows="10" cols="30"></textarea>
+      <br>
+      <input type="submit" value="Analyze">
+    </form>
+    <br>
+    <div id="response"></div>
+    <script>
+      const form = document.querySelector('form');
+      const responseDiv = document.querySelector('#response');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const response = await fetch('/analyze', {
+          method: 'POST',
+          body: formData
+        });
+
+        const json = await response.json();
+        const polarity = json.polarity;
+        const subjectivity = json.subjectivity;
+
+        const message = `Polarity: ${polarity}\nSubjectivity: ${subjectivity}`;
+        responseDiv.textContent = message;
+      });
+    </script>
+  </body>
+</html>
